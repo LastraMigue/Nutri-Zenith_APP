@@ -7,9 +7,10 @@ import ClientVerifyOTP from './pages/ClientVerifyOTP';
 import ClientLogin from './pages/ClientLogin';
 import ClientVerifyLoginOTP from './pages/ClientVerifyLoginOTP';
 import ClientDashboard from './pages/ClientDashboard';
+import AdminLogin from './pages/AdminLogin';
+import AdminDashboard from './pages/AdminDashboard';
 
 // Placeholder components for future routes
-const LoginPage = () => <div style={{ padding: '20px', color: 'var(--text-main)' }}>Página de Login (En construcción)</div>;
 const RegisterPage = () => <div style={{ padding: '20px', color: 'var(--text-main)' }}>Página de Registro (En construcción)</div>;
 
 function App() {
@@ -22,7 +23,8 @@ function App() {
       <Route path="/register" element={<ClientRegister />} />
       <Route path="/register/verify" element={<ClientVerifyOTP />} />
       <Route path="/client-dashboard" element={<ClientDashboard />} />
-      <Route path="/login" element={<LoginPage />} />
+      <Route path="/admin-login" element={<AdminLogin />} />
+      <Route path="/admin-dashboard" element={<AdminDashboard />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

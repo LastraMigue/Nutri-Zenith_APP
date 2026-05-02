@@ -29,7 +29,7 @@ const InitialLogin = () => {
         icon={ShieldCheck}
         title="Portal Especialista"
         subtitle="Gestión clínica y pacientes"
-        onClick={() => navigate('/login?role=admin')}
+        onClick={() => navigate('/admin-login')}
         variants={itemVariants}
       />
     </AuthCard>
