@@ -1,0 +1,128 @@
+.landing-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background-color: var(--bg-app);
+}
+
+.main-auth-card {
+  background: var(--bg-white);
+  width: 100%;
+  max-width: 420px;
+  border-radius: 3.5rem; /* Slightly more rounded */
+  padding: 3.5rem 2.5rem;
+  /* More pronounced and deep shadow as requested */
+  box-shadow: 
+    0 20px 25px -5px rgba(0, 0, 0, 0.05),
+    0 35px 60px -15px rgba(16, 185, 129, 0.25),
+    0 0 1px 0 rgba(16, 185, 129, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid rgba(16, 185, 129, 0.05); /* Very subtle border for definition */
+}
+
+.logo-section-compact {
+  margin-bottom: 2.5rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.company-logo-large {
+  width: 24rem; /* Even slightly larger */
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 15px 20px rgba(16, 185, 129, 0.08));
+}
+
+.selection-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  width: 100%;
+}
+
+.auth-option-button {
+  display: flex;
+  align-items: center;
+  padding: 1.25rem;
+  border-radius: 1.75rem;
+  background: #F9FAFB;
+  border: 1px solid #F3F4F6;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.auth-option-button:hover {
+  background: var(--bg-white);
+  border-color: var(--primary);
+  box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.12);
+}
+
+.option-icon-box {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 1.1rem;
+  background: var(--primary-light);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1.25rem;
+  flex-shrink: 0;
+}
+
+.option-text-box {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.option-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.option-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-top: 0.1rem;
+}
+
+.arrow-icon {
+  color: var(--primary);
+  opacity: 0.3;
+  transition: all 0.3s ease;
+}
+
+.auth-option-button:hover .arrow-icon {
+  opacity: 1;
+  transform: translateX(4px);
+}
+
+.card-footer-simple {
+  margin-top: 3.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--primary);
+  opacity: 0.6;
+  letter-spacing: 0.2em;
+}
+
+@media (max-width: 480px) {
+  .main-auth-card {
+    padding: 2.5rem 1.5rem;
+    border-radius: 2.5rem;
+  }
+  
+  .company-logo-large {
+    width: 20rem;
+  }
+}
