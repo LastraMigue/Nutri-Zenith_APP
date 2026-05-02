@@ -33,7 +33,7 @@ const ClientAuthOptions = () => {
         icon={UserPlus}
         title="Registrarse"
         subtitle="Crea una nueva cuenta de cliente"
-        onClick={() => navigate('/register?role=client')}
+        onClick={() => navigate('/register')}
         variants={itemVariants}
       />
     </AuthCard>
