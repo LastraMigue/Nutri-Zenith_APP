@@ -25,7 +25,7 @@ const ClientAuthOptions = () => {
         icon={LogIn}
         title="Iniciar Sesión"
         subtitle="Accede a tu cuenta personal"
-        onClick={() => navigate('/login?role=client')}
+        onClick={() => navigate('/client-login')}
         variants={itemVariants}
       />
       
