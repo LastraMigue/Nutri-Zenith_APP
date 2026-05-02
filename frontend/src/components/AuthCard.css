@@ -1,19 +1,19 @@
-.landing-container {
+.auth-page-wrapper {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
   background-color: var(--bg-app);
+  position: relative;
 }
 
-.main-auth-card {
+.auth-card-main {
   background: var(--bg-white);
   width: 100%;
   max-width: 420px;
-  border-radius: 3.5rem; /* Slightly more rounded */
+  border-radius: 3.5rem;
   padding: 3.5rem 2.5rem;
-  /* More pronounced and deep shadow as requested */
   box-shadow: 
     0 20px 25px -5px rgba(0, 0, 0, 0.05),
     0 35px 60px -15px rgba(16, 185, 129, 0.25),
@@ -21,31 +21,87 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: 1px solid rgba(16, 185, 129, 0.05); /* Very subtle border for definition */
+  border: 1px solid rgba(16, 185, 129, 0.05);
+  position: relative;
 }
 
-.logo-section-compact {
+.auth-logo-container {
   margin-bottom: 2.5rem;
   width: 100%;
   display: flex;
   justify-content: center;
 }
 
-.company-logo-large {
-  width: 24rem; /* Even slightly larger */
+.auth-logo-img {
+  width: 24rem;
   height: auto;
   object-fit: contain;
   filter: drop-shadow(0 15px 20px rgba(16, 185, 129, 0.08));
 }
 
-.selection-stack {
+.auth-card-footer {
+  margin-top: 3.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--primary);
+  opacity: 0.6;
+  letter-spacing: 0.2em;
+  text-align: center;
+}
+
+/* Common Header Styles */
+.auth-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.auth-header-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 0.25rem;
+}
+
+.auth-header-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+/* Common Back Button */
+.auth-back-button {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  border: 1px solid #F3F4F6;
+  background: #F9FAFB;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.auth-back-button:hover {
+  background: var(--bg-white);
+  color: var(--primary);
+  border-color: var(--primary);
+  transform: translateX(-3px);
+}
+
+/* Common Button Stack */
+.auth-button-stack {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
   width: 100%;
 }
 
-.auth-option-button {
+.auth-action-button {
   display: flex;
   align-items: center;
   padding: 1.25rem;
@@ -59,13 +115,13 @@
   position: relative;
 }
 
-.auth-option-button:hover {
+.auth-action-button:hover {
   background: var(--bg-white);
   border-color: var(--primary);
   box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.12);
 }
 
-.option-icon-box {
+.auth-icon-container {
   width: 3.5rem;
   height: 3.5rem;
   border-radius: 1.1rem;
@@ -78,51 +134,42 @@
   flex-shrink: 0;
 }
 
-.option-text-box {
+.auth-text-container {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
 }
 
-.option-title {
+.auth-button-title {
   font-size: 1.125rem;
   font-weight: 700;
   color: var(--text-main);
 }
 
-.option-subtitle {
+.auth-button-subtitle {
   font-size: 0.875rem;
   color: var(--text-muted);
   margin-top: 0.1rem;
 }
 
-.arrow-icon {
+.auth-arrow {
   color: var(--primary);
   opacity: 0.3;
   transition: all 0.3s ease;
 }
 
-.auth-option-button:hover .arrow-icon {
+.auth-action-button:hover .auth-arrow {
   opacity: 1;
   transform: translateX(4px);
 }
 
-.card-footer-simple {
-  margin-top: 3.5rem;
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--primary);
-  opacity: 0.6;
-  letter-spacing: 0.2em;
-}
-
 @media (max-width: 480px) {
-  .main-auth-card {
+  .auth-card-main {
     padding: 2.5rem 1.5rem;
     border-radius: 2.5rem;
   }
   
-  .company-logo-large {
+  .auth-logo-img {
     width: 20rem;
   }
 }
