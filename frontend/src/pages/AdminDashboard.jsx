@@ -1,10 +1,13 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Users, FileText, Package, UserPlus } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import fondo from '../assets/fondo.jpg';
 
 const AdminDashboard = () => {
+  const navigate = useNavigate();
+
   return (
     <div style={{
       minHeight: '100vh',
@@ -51,7 +54,7 @@ const AdminDashboard = () => {
           <ActionCard 
             icon={<Users size={32} />}
             title="Ver almacén de todos los perfiles"
-            onClick={() => console.log('Navegar a perfiles')}
+            onClick={() => navigate('/admin/profiles')}
             color="var(--primary)"
           />
 

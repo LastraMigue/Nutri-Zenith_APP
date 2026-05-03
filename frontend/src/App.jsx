@@ -9,6 +9,7 @@ import ClientVerifyLoginOTP from './pages/ClientVerifyLoginOTP';
 import ClientDashboard from './pages/ClientDashboard';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
+import AdminProfiles from './pages/AdminProfiles';
 import ProtectedRoute from './routes/ProtectedRoute';
 
 // Placeholder components for future routes
@@ -37,6 +38,14 @@ function App() {
         element={
           <ProtectedRoute allowedRole="admin">
             <AdminDashboard />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/admin/profiles" 
+        element={
+          <ProtectedRoute allowedRole="admin">
+            <AdminProfiles />
           </ProtectedRoute>
         } 
       />
