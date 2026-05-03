@@ -9,6 +9,7 @@ import ClientVerifyLoginOTP from './pages/ClientVerifyLoginOTP';
 import ClientDashboard from './pages/ClientDashboard';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
+import ProtectedRoute from './routes/ProtectedRoute';
 
 // Placeholder components for future routes
 const RegisterPage = () => <div style={{ padding: '20px', color: 'var(--text-main)' }}>Página de Registro (En construcción)</div>;
@@ -22,9 +23,23 @@ function App() {
       <Route path="/client-login/verify" element={<ClientVerifyLoginOTP />} />
       <Route path="/register" element={<ClientRegister />} />
       <Route path="/register/verify" element={<ClientVerifyOTP />} />
-      <Route path="/client-dashboard" element={<ClientDashboard />} />
+      <Route 
+        path="/client-dashboard" 
+        element={
+          <ProtectedRoute allowedRole="client">
+            <ClientDashboard />
+          </ProtectedRoute>
+        } 
+      />
       <Route path="/admin-login" element={<AdminLogin />} />
-      <Route path="/admin-dashboard" element={<AdminDashboard />} />
+      <Route 
+        path="/admin-dashboard" 
+        element={
+          <ProtectedRoute allowedRole="admin">
+            <AdminDashboard />
+          </ProtectedRoute>
+        } 
+      />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
