@@ -12,6 +12,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import AdminProfiles from './pages/AdminProfiles';
 import DietManagement from './pages/DietManagement';
 import UploadDiet from './pages/UploadDiet';
+import ViewDiet from './pages/ViewDiet';
 import ProtectedRoute from './routes/ProtectedRoute';
 
 // Placeholder components for future routes
@@ -51,22 +52,9 @@ function App() {
           </ProtectedRoute>
         } 
       />
-      <Route 
-        path="/admin/diets" 
-        element={
-          <ProtectedRoute allowedRole="admin">
-            <DietManagement />
-          </ProtectedRoute>
-        } 
-      />
-      <Route 
-        path="/admin/upload-diet" 
-        element={
-          <ProtectedRoute allowedRole="admin">
-            <UploadDiet />
-          </ProtectedRoute>
-        } 
-      />
+      <Route path="/admin/diets" element={<ProtectedRoute allowedRole="admin"><DietManagement /></ProtectedRoute>} />
+      <Route path="/admin/diets/:id" element={<ProtectedRoute allowedRole="admin"><ViewDiet /></ProtectedRoute>} />
+      <Route path="/admin/upload-diet" element={<ProtectedRoute allowedRole="admin"><UploadDiet /></ProtectedRoute>} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
