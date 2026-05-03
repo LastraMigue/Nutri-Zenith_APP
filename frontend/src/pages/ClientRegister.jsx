@@ -40,14 +40,12 @@ const ClientRegister = () => {
     setLoading(true);
     setErrorMsg('');
 
-    // Check if email is already registered
-    const { data: existing } = await supabase
-      .from('profiles')
-      .select('id')
-      .eq('correo', form.correo.toLowerCase().trim())
-      .maybeSingle();
+    // Check if email is already registered using the secure RPC function
+    const { data: exists, error: rpcError } = await supabase.rpc('check_email_exists', {
+      lookup_email: form.correo.toLowerCase().trim()
+    });
 
-    if (existing) {
+    if (exists || rpcError) {
       setErrorMsg('Este correo ya está registrado. Por favor inicia sesión.');
       setLoading(false);
       return;

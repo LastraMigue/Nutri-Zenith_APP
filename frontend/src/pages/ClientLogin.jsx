@@ -25,14 +25,12 @@ const ClientLogin = () => {
     setLoading(true);
     setErrorMsg('');
 
-    // Check if email exists in the database
-    const { data: existing } = await supabase
-      .from('profiles')
-      .select('id')
-      .eq('correo', correo.toLowerCase().trim())
-      .maybeSingle();
+    // Comprobamos si el correo existe usando nuestra función segura (RPC)
+    const { data: exists, error: rpcError } = await supabase.rpc('check_email_exists', {
+      lookup_email: correo.toLowerCase().trim()
+    });
 
-    if (!existing) {
+    if (!exists || rpcError) {
       setErrorMsg('Este correo no está registrado. Por favor, crea una cuenta primero.');
       setLoading(false);
       return;
