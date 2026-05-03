@@ -10,7 +10,8 @@ import {
   BadgeCheck,
   ArrowLeft,
   Loader2,
-  ChevronRight
+  ChevronRight,
+  Trash2
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
@@ -23,7 +24,7 @@ const DietManagement = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('newest');
-  const [activeTab, setActiveTab] = useState('all'); // 'all' or 'mine'
+  const [activeTab, setActiveTab] = useState('all'); // 'all', 'admins', 'mine'
   const [currentUserId, setCurrentUserId] = useState(null);
 
   useEffect(() => {
@@ -47,6 +48,29 @@ const DietManagement = () => {
     setLoading(false);
   };
 
+  const handleDeleteDiet = async (e, dietId) => {
+    e.stopPropagation(); // Evitar que se abra la dieta al clicar en borrar
+    
+    if (!window.confirm('¿Estás seguro de que deseas eliminar esta dieta? Esta acción no se puede deshacer.')) {
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('diets')
+        .delete()
+        .eq('id', dietId);
+
+      if (error) throw error;
+      
+      // Actualizar la lista local
+      setDiets(prev => prev.filter(d => d.id !== dietId));
+    } catch (err) {
+      console.error('Error al eliminar dieta:', err);
+      alert('No se pudo eliminar la dieta. Inténtalo de nuevo.');
+    }
+  };
+
   const filteredAndSortedDiets = diets
     .filter(d => {
       const search = searchTerm.toLowerCase();
@@ -58,6 +82,9 @@ const DietManagement = () => {
       
       if (activeTab === 'mine') {
         return matchesSearch && d.creator_id === currentUserId;
+      }
+      if (activeTab === 'admins') {
+        return matchesSearch && d.creator_role === 'admin';
       }
       return matchesSearch;
     })
@@ -159,7 +186,22 @@ const DietManagement = () => {
                   transition: 'all 0.2s'
                 }}
               >
-                Todas las dietas
+                Todas
+              </button>
+              <button 
+                onClick={() => setActiveTab('admins')}
+                style={{
+                  padding: '0.5rem 1.5rem',
+                  borderRadius: '0.75rem',
+                  border: 'none',
+                  background: activeTab === 'admins' ? 'var(--primary-light)' : 'transparent',
+                  color: activeTab === 'admins' ? 'var(--primary)' : 'var(--text-muted)',
+                  fontWeight: '700',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s'
+                }}
+              >
+                Administradores
               </button>
               <button 
                 onClick={() => setActiveTab('mine')}
@@ -297,8 +339,32 @@ const DietManagement = () => {
                           <Calendar size={14} /> {new Date(diet.created_at).toLocaleDateString()}
                         </div>
                       </div>
-                      <div style={{ color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.85rem', fontWeight: '700' }}>
-                        Ver <ChevronRight size={16} />
+                      
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                        {diet.creator_id === currentUserId && (
+                          <button 
+                            onClick={(e) => handleDeleteDiet(e, diet.id)}
+                            style={{
+                              background: 'rgba(239, 68, 68, 0.1)',
+                              color: '#ef4444',
+                              border: 'none',
+                              padding: '0.5rem',
+                              borderRadius: '0.5rem',
+                              cursor: 'pointer',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              transition: 'all 0.2s'
+                            }}
+                            onMouseOver={(e) => e.currentTarget.style.background = 'rgba(239, 68, 68, 0.2)'}
+                            onMouseOut={(e) => e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)'}
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        )}
+                        <div style={{ color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.85rem', fontWeight: '700' }}>
+                          Ver <ChevronRight size={16} />
+                        </div>
                       </div>
                     </div>
                   </motion.div>
