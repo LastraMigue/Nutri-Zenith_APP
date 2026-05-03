@@ -23,9 +23,16 @@ const DietManagement = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('newest');
+  const [activeTab, setActiveTab] = useState('all'); // 'all' or 'mine'
+  const [currentUserId, setCurrentUserId] = useState(null);
 
   useEffect(() => {
-    fetchAllDiets();
+    const init = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setCurrentUserId(user?.id);
+      fetchAllDiets();
+    };
+    init();
   }, []);
 
   const fetchAllDiets = async () => {
@@ -43,11 +50,16 @@ const DietManagement = () => {
   const filteredAndSortedDiets = diets
     .filter(d => {
       const search = searchTerm.toLowerCase();
-      return (
+      const matchesSearch = (
         d.titulo?.toLowerCase().includes(search) ||
         d.descripcion?.toLowerCase().includes(search) ||
         d.creator_nombre?.toLowerCase().includes(search)
       );
+      
+      if (activeTab === 'mine') {
+        return matchesSearch && d.creator_id === currentUserId;
+      }
+      return matchesSearch;
     })
     .sort((a, b) => {
       if (sortBy === 'newest') return new Date(b.created_at) - new Date(a.created_at);
@@ -119,7 +131,7 @@ const DietManagement = () => {
           </button>
         </div>
 
-        {/* Card Blanca Principal (Igual que en perfiles) */}
+        {/* Card Blanca Principal */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -131,49 +143,83 @@ const DietManagement = () => {
             border: '1px solid var(--border-color)'
           }}
         >
-          {/* Controles de Búsqueda y Filtro */}
-          <div style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: '1rem',
-            marginBottom: '2rem',
-            alignItems: 'center',
-            justifyContent: 'space-between'
-          }}>
-            {/* Buscador */}
-            <div style={{ position: 'relative', flex: 1, minWidth: '300px' }}>
-              <Search size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
-              <input 
-                type="text"
-                placeholder="Buscar por título, descripción o autor..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+          {/* Tabs y Controles */}
+          <div style={{ marginBottom: '2rem' }}>
+            <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', borderBottom: '1px solid var(--bg-app)', paddingBottom: '1rem' }}>
+              <button 
+                onClick={() => setActiveTab('all')}
                 style={{
-                  width: '100%',
-                  padding: '0.75rem 1rem 0.75rem 3rem',
+                  padding: '0.5rem 1.5rem',
                   borderRadius: '0.75rem',
-                  border: '1px solid var(--border-color)',
-                  background: 'var(--bg-app)',
-                  fontSize: '1rem',
-                  outline: 'none',
-                  color: 'var(--text-main)',
-                  fontFamily: 'inherit'
+                  border: 'none',
+                  background: activeTab === 'all' ? 'var(--primary-light)' : 'transparent',
+                  color: activeTab === 'all' ? 'var(--primary)' : 'var(--text-muted)',
+                  fontWeight: '700',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s'
                 }}
-              />
+              >
+                Todas las dietas
+              </button>
+              <button 
+                onClick={() => setActiveTab('mine')}
+                style={{
+                  padding: '0.5rem 1.5rem',
+                  borderRadius: '0.75rem',
+                  border: 'none',
+                  background: activeTab === 'mine' ? 'var(--primary-light)' : 'transparent',
+                  color: activeTab === 'mine' ? 'var(--primary)' : 'var(--text-muted)',
+                  fontWeight: '700',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s'
+                }}
+              >
+                Mis dietas
+              </button>
             </div>
 
-            {/* Selector de Orden */}
-            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1rem', background: 'var(--bg-app)', borderRadius: '0.75rem', border: '1px solid var(--border-color)' }}>
-                <ArrowUpDown size={16} style={{ color: 'var(--text-muted)' }} />
-                <select 
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  style={{ background: 'transparent', border: 'none', color: 'var(--text-main)', outline: 'none', cursor: 'pointer', fontWeight: '500', fontFamily: 'inherit' }}
-                >
-                  <option value="newest">Más recientes</option>
-                  <option value="oldest">Más antiguos</option>
-                </select>
+            <div style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '1rem',
+              alignItems: 'center',
+              justifyContent: 'space-between'
+            }}>
+              {/* Buscador */}
+              <div style={{ position: 'relative', flex: 1, minWidth: '300px' }}>
+                <Search size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                <input 
+                  type="text"
+                  placeholder="Buscar por título, descripción o autor..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '0.75rem 1rem 0.75rem 3rem',
+                    borderRadius: '0.75rem',
+                    border: '1px solid var(--border-color)',
+                    background: 'var(--bg-app)',
+                    fontSize: '1rem',
+                    outline: 'none',
+                    color: 'var(--text-main)',
+                    fontFamily: 'inherit'
+                  }}
+                />
+              </div>
+
+              {/* Selector de Orden */}
+              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1rem', background: 'var(--bg-app)', borderRadius: '0.75rem', border: '1px solid var(--border-color)' }}>
+                  <ArrowUpDown size={16} style={{ color: 'var(--text-muted)' }} />
+                  <select 
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    style={{ background: 'transparent', border: 'none', color: 'var(--text-main)', outline: 'none', cursor: 'pointer', fontWeight: '500', fontFamily: 'inherit' }}
+                  >
+                    <option value="newest">Más recientes</option>
+                    <option value="oldest">Más antiguos</option>
+                  </select>
+                </div>
               </div>
             </div>
           </div>
@@ -206,22 +252,22 @@ const DietManagement = () => {
                       gap: '1rem'
                     }}
                   >
-                    {/* Badge Verificado */}
+                    {/* Badge Verificado (Azul) */}
                     {diet.is_verified && (
                       <div style={{
                         position: 'absolute',
                         top: '1rem',
                         right: '1rem',
-                        color: '#2563eb',
+                        color: '#2563eb', // Azul
                         display: 'flex',
                         alignItems: 'center',
                         gap: '0.25rem',
-                        background: '#fff',
+                        background: '#eff6ff', // Fondo azul claro
                         padding: '0.25rem 0.6rem',
                         borderRadius: '2rem',
                         fontSize: '0.7rem',
                         fontWeight: '800',
-                        border: '1px solid #dbeafe',
+                        border: '1px solid #dbeafe', // Borde azul
                         boxShadow: '0 2px 4px rgba(37, 99, 235, 0.1)'
                       }}>
                         <BadgeCheck size={14} /> VERIFICADA
@@ -245,7 +291,7 @@ const DietManagement = () => {
                     <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '1rem', marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem', color: 'var(--text-main)', fontWeight: '600' }}>
-                          <User size={14} /> {diet.creator_nombre}
+                          <User size={14} /> {diet.creator_id === currentUserId ? <span style={{ color: 'var(--primary)' }}>Tú</span> : diet.creator_nombre}
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                           <Calendar size={14} /> {new Date(diet.created_at).toLocaleDateString()}

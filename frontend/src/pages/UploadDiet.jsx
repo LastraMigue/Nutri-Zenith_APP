@@ -8,7 +8,8 @@ import {
   AlertCircle,
   Loader2,
   Calendar,
-  Clock
+  Clock,
+  BadgeCheck
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
@@ -97,7 +98,7 @@ const UploadDiet = () => {
           titulo,
           descripcion,
           plan,
-          is_verified: userProfile?.role === 'admin' // Se marca como verificada si el usuario es admin
+          is_verified: userProfile?.role === 'admin'
         }]);
 
       if (insertError) throw insertError;
@@ -151,8 +152,22 @@ const UploadDiet = () => {
               <ArrowLeft size={20} />
             </button>
             <div>
-              <h1 style={{ color: 'var(--text-main)', fontSize: '2rem', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                Subir Dieta <span style={{ color: 'var(--primary)', fontSize: '1rem', background: 'var(--primary-light)', padding: '0.25rem 0.75rem', borderRadius: '2rem' }}>Verificada</span>
+              <h1 style={{ color: 'var(--text-main)', fontSize: '2rem', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                Subir Dieta 
+                <span style={{ 
+                  color: '#2563eb', 
+                  fontSize: '0.8rem', 
+                  background: '#eff6ff', 
+                  padding: '0.4rem 0.8rem', 
+                  borderRadius: '2rem',
+                  border: '1px solid #dbeafe',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.3rem',
+                  boxShadow: '0 2px 4px rgba(37, 99, 235, 0.1)'
+                }}>
+                  <BadgeCheck size={16} /> VERIFICADA
+                </span>
               </h1>
               <p style={{ color: 'var(--text-muted)' }}>Completa el plan nutricional semanal.</p>
             </div>
@@ -242,7 +257,7 @@ const UploadDiet = () => {
             <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '1000px' }}>
               <thead>
                 <tr>
-                  <th style={{ ...thStyle, width: '150px', background: 'var(--bg-app)' }}>Comida / Día</th>
+                  <th style={{ ...thStyle, width: '150px' }}>Comida / Día</th>
                   {DAYS.map(day => (
                     <th key={day} style={thStyle}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
@@ -298,17 +313,19 @@ const UploadDiet = () => {
 
 const thStyle = {
   padding: '1.25rem',
-  color: 'var(--text-main)',
+  color: 'var(--primary)',
   fontSize: '0.9rem',
   fontWeight: '800',
   textAlign: 'center',
-  borderBottom: '2px solid var(--bg-app)',
-  background: '#fff'
+  borderBottom: '2px solid var(--border-color)',
+  borderRight: '1px solid var(--border-color)',
+  background: 'var(--bg-app)'
 };
 
 const tdStyle = {
   padding: '0',
-  borderRight: '1px solid var(--bg-app)',
+  borderRight: '1px solid var(--border-color)',
+  borderBottom: '1px solid var(--border-color)',
   transition: 'background 0.2s'
 };
 
