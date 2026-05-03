@@ -61,8 +61,8 @@ const AdminDashboard = () => {
           {/* Card 2: Dietas */}
           <ActionCard 
             icon={<FileText size={32} />}
-            title="Subir dietas verificadas"
-            onClick={() => console.log('Subir dietas')}
+            title="Dietas"
+            onClick={() => navigate('/admin/diets')}
             color="#0ea5e9"
           />
 

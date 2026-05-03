@@ -25,13 +25,19 @@ const ClientLogin = () => {
     setLoading(true);
     setErrorMsg('');
 
-    // Comprobamos si el correo existe usando nuestra función segura (RPC)
-    const { data: exists, error: rpcError } = await supabase.rpc('check_email_exists', {
+    // Comprobamos el rol del correo usando nuestra función segura (RPC)
+    const { data: role, error: rpcError } = await supabase.rpc('get_user_role_by_email', {
       lookup_email: correo.toLowerCase().trim()
     });
 
-    if (!exists || rpcError) {
+    if (rpcError || !role) {
       setErrorMsg('Este correo no está registrado. Por favor, crea una cuenta primero.');
+      setLoading(false);
+      return;
+    }
+
+    if (role === 'admin') {
+      setErrorMsg('Acceso denegado. Este portal es solo para clientes. Por favor, usa el acceso de administrador.');
       setLoading(false);
       return;
     }

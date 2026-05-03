@@ -10,6 +10,8 @@ import ClientDashboard from './pages/ClientDashboard';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminProfiles from './pages/AdminProfiles';
+import DietManagement from './pages/DietManagement';
+import UploadDiet from './pages/UploadDiet';
 import ProtectedRoute from './routes/ProtectedRoute';
 
 // Placeholder components for future routes
@@ -46,6 +48,22 @@ function App() {
         element={
           <ProtectedRoute allowedRole="admin">
             <AdminProfiles />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/admin/diets" 
+        element={
+          <ProtectedRoute allowedRole="admin">
+            <DietManagement />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/admin/upload-diet" 
+        element={
+          <ProtectedRoute allowedRole="admin">
+            <UploadDiet />
           </ProtectedRoute>
         } 
       />
