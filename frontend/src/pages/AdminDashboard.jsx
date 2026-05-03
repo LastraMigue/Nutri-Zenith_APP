@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Users, FileText, Package } from 'lucide-react';
+import { Users, FileText, Package, UserPlus } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import fondo from '../assets/fondo.jpg';
 
@@ -69,6 +69,14 @@ const AdminDashboard = () => {
             title="Subir productos recomendados verificados"
             onClick={() => console.log('Subir productos')}
             color="#8b5cf6"
+          />
+
+          {/* Card 4: Añadir Admin */}
+          <ActionCard 
+            icon={<UserPlus size={32} />}
+            title="Añadir otros administradores"
+            onClick={() => console.log('Añadir administradores')}
+            color="#f59e0b"
           />
         </div>
       </main>

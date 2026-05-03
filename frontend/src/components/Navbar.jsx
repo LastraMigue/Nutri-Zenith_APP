@@ -33,6 +33,7 @@ const Navbar = () => {
       padding: '1rem 2rem',
       backgroundColor: 'var(--bg-white)',
       boxShadow: 'var(--shadow-soft)',
+      borderBottom: '4px solid var(--primary)',
       position: 'sticky',
       top: 0,
       zIndex: 50
