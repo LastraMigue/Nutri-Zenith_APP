@@ -38,14 +38,39 @@ const DietManagement = () => {
 
   const fetchAllDiets = async () => {
     setLoading(true);
-    const { data, error } = await supabase.rpc('get_all_diets_with_profiles');
-    
-    if (error) {
-      console.error('Error fetching diets:', error);
-    } else {
+    try {
+      // 1. Intentar por RPC (Función optimizada con perfiles)
+      let { data, error } = await supabase.rpc('get_all_diets_with_profiles');
+      
+      // 2. Si falla o no hay datos, intentar consulta directa como respaldo
+      if (error || !data || data.length === 0) {
+        console.warn('RPC falló o vacío, usando consulta directa...');
+        const { data: directData, error: directError } = await supabase
+          .from('diets')
+          .select(`
+            *,
+            profiles!creator_id (nombre, role)
+          `)
+          .order('created_at', { ascending: false });
+
+        if (!directError && directData) {
+          // Adaptar el formato de la tabla directa al formato que espera la UI
+          data = directData.map(d => ({
+            ...d,
+            creator_nombre: d.profiles?.nombre || 'Desconocido',
+            creator_role: d.profiles?.role || 'user'
+          }));
+        } else if (directError) {
+          console.error('Error en consulta directa:', directError);
+        }
+      }
+
       setDiets(data || []);
+    } catch (err) {
+      console.error('Error crítico cargando dietas:', err);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const handleDeleteDiet = async (e, dietId) => {

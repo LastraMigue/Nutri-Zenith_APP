@@ -91,6 +91,13 @@ const UploadDiet = () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       
+      // Asegurarnos de tener el perfil más reciente antes de guardar
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+
       const { error: insertError } = await supabase
         .from('diets')
         .insert([{
@@ -98,7 +105,7 @@ const UploadDiet = () => {
           titulo,
           descripcion,
           plan,
-          is_verified: userProfile?.role === 'admin'
+          is_verified: profile?.role === 'admin'
         }]);
 
       if (insertError) throw insertError;
