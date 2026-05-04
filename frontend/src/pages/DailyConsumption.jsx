@@ -15,9 +15,7 @@ import {
   ArrowUpDown,
   ChevronRight,
   Loader2,
-  History,
-  CloudCheck,
-  Cloud
+  History
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
