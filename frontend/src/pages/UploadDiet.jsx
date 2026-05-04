@@ -110,8 +110,8 @@ const UploadDiet = () => {
 
       if (insertError) throw insertError;
 
-      setSuccessMsg('¡Dieta guardada y verificada correctamente!');
-      setTimeout(() => navigate('/admin/diets'), 2000);
+      setSuccessMsg(profile?.role === 'admin' ? '¡Dieta guardada y verificada correctamente!' : '¡Dieta guardada correctamente!');
+      setTimeout(() => navigate(-1), 2000);
     } catch (err) {
       setErrorMsg('Error al guardar la dieta. Inténtalo de nuevo.');
       console.error(err);
@@ -161,20 +161,22 @@ const UploadDiet = () => {
             <div>
               <h1 style={{ color: 'var(--text-main)', fontSize: '2rem', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                 Subir Dieta 
-                <span style={{ 
-                  color: '#2563eb', 
-                  fontSize: '0.8rem', 
-                  background: '#eff6ff', 
-                  padding: '0.4rem 0.8rem', 
-                  borderRadius: '2rem',
-                  border: '1px solid #dbeafe',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.3rem',
-                  boxShadow: '0 2px 4px rgba(37, 99, 235, 0.1)'
-                }}>
-                  <BadgeCheck size={16} /> VERIFICADA
-                </span>
+                {userProfile?.role === 'admin' && (
+                  <span style={{ 
+                    color: '#2563eb', 
+                    fontSize: '0.8rem', 
+                    background: '#eff6ff', 
+                    padding: '0.4rem 0.8rem', 
+                    borderRadius: '2rem',
+                    border: '1px solid #dbeafe',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.3rem',
+                    boxShadow: '0 2px 4px rgba(37, 99, 235, 0.1)'
+                  }}>
+                    <BadgeCheck size={16} /> VERIFICADA
+                  </span>
+                )}
               </h1>
               <p style={{ color: 'var(--text-muted)' }}>Completa el plan nutricional semanal.</p>
             </div>

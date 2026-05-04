@@ -7,7 +7,6 @@ import ClientVerifyOTP from './pages/ClientVerifyOTP';
 import ClientLogin from './pages/ClientLogin';
 import ClientVerifyLoginOTP from './pages/ClientVerifyLoginOTP';
 import ClientDashboard from './pages/ClientDashboard';
-import ClientDietManagement from './pages/ClientDietManagement';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminProfiles from './pages/AdminProfiles';
@@ -43,7 +42,7 @@ function App() {
         path="/dietas" 
         element={
           <ProtectedRoute allowedRole="client">
-            <ClientDietManagement />
+            <DietManagement />
           </ProtectedRoute>
         } 
       />

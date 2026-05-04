@@ -24,14 +24,28 @@ const DietManagement = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('newest');
-  const [activeTab, setActiveTab] = useState('all'); // 'all', 'admins', 'mine'
+  const [activeTab, setActiveTab] = useState('all');
   const [currentUserId, setCurrentUserId] = useState(null);
+  const [userProfile, setUserProfile] = useState(null);
 
   useEffect(() => {
     const init = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setCurrentUserId(user?.id);
-      fetchAllDiets();
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          setCurrentUserId(user.id);
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', user.id)
+            .single();
+          setUserProfile(profile);
+        }
+      } catch (err) {
+        console.error("Error en init:", err);
+      } finally {
+        fetchAllDiets();
+      }
     };
     init();
   }, []);
@@ -44,7 +58,6 @@ const DietManagement = () => {
       
       // 2. Si falla o no hay datos, intentar consulta directa como respaldo
       if (error || !data || data.length === 0) {
-        console.warn('RPC falló o vacío, usando consulta directa...');
         const { data: directData, error: directError } = await supabase
           .from('diets')
           .select(`
@@ -60,8 +73,6 @@ const DietManagement = () => {
             creator_nombre: d.profiles?.nombre || 'Desconocido',
             creator_role: d.profiles?.role || 'user'
           }));
-        } else if (directError) {
-          console.error('Error en consulta directa:', directError);
         }
       }
 
@@ -118,6 +129,8 @@ const DietManagement = () => {
       return new Date(a.created_at) - new Date(b.created_at);
     });
 
+  const isAdmin = userProfile?.role === 'admin';
+
   return (
     <div style={{
       minHeight: '100vh',
@@ -143,7 +156,7 @@ const DietManagement = () => {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <button 
-              onClick={() => navigate('/admin-dashboard')}
+              onClick={() => navigate(-1)}
               style={{
                 background: 'var(--bg-white)',
                 border: '1px solid var(--border-color)',
@@ -157,13 +170,17 @@ const DietManagement = () => {
               <ArrowLeft size={20} />
             </button>
             <div>
-              <h1 style={{ color: 'var(--text-main)', fontSize: '2rem', fontWeight: '800' }}>Gestión de Dietas</h1>
-              <p style={{ color: 'var(--text-muted)' }}>Explora y administra todos los planes nutricionales.</p>
+              <h1 style={{ color: 'var(--text-main)', fontSize: '2rem', fontWeight: '800' }}>
+                {isAdmin ? 'Gestión de Dietas' : 'Dietas'}
+              </h1>
+              <p style={{ color: 'var(--text-muted)' }}>
+                {isAdmin ? 'Explora y administra todos los planes nutricionales.' : 'Explora y comparte planes nutricionales.'}
+              </p>
             </div>
           </div>
 
           <button 
-            onClick={() => navigate('/admin/upload-diet')}
+            onClick={() => navigate(isAdmin ? '/admin/upload-diet' : '/subir-dieta')}
             style={{
               background: 'var(--primary)',
               color: 'white',
@@ -179,7 +196,7 @@ const DietManagement = () => {
             }}
           >
             <Plus size={20} />
-            Crear Nueva Dieta
+            {isAdmin ? 'Crear Nueva Dieta' : 'Subir Mi Dieta'}
           </button>
         </div>
 
@@ -226,7 +243,7 @@ const DietManagement = () => {
                   transition: 'all 0.2s'
                 }}
               >
-                Administradores
+                Especialistas
               </button>
               <button 
                 onClick={() => setActiveTab('mine')}
