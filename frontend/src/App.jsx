@@ -7,6 +7,7 @@ import ClientVerifyOTP from './pages/ClientVerifyOTP';
 import ClientLogin from './pages/ClientLogin';
 import ClientVerifyLoginOTP from './pages/ClientVerifyLoginOTP';
 import ClientDashboard from './pages/ClientDashboard';
+import DailyConsumption from './pages/DailyConsumption';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminProfiles from './pages/AdminProfiles';
@@ -68,6 +69,15 @@ function App() {
         element={
           <ProtectedRoute allowedRole="client">
             <ViewProduct />
+          </ProtectedRoute>
+        } 
+      />
+
+      <Route 
+        path="/consumo-diario" 
+        element={
+          <ProtectedRoute allowedRole="client">
+            <DailyConsumption />
           </ProtectedRoute>
         } 
       />

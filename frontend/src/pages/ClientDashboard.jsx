@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Calculator, FileText, Package } from 'lucide-react';
+import { Calculator, FileText, Package, TrendingUp } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import fondo from '../assets/fondo.jpg';
@@ -51,9 +51,9 @@ const ClientDashboard = () => {
         }}>
           {/* Card 1: Calculo */}
           <ActionCard 
-            icon={<Calculator size={32} />}
+            icon={<TrendingUp size={32} />}
             title="Cálculo de consumo diario"
-            onClick={() => console.log('Cálculo de consumo')}
+            onClick={() => navigate('/consumo-diario')}
             color="var(--primary)"
           />
 
