@@ -324,7 +324,7 @@ const DietManagement = () => {
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: index * 0.05 }}
                     whileHover={{ y: -5, boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}
-                    onClick={() => navigate(`/admin/diets/${diet.id}`)}
+                    onClick={() => navigate(isAdmin ? `/admin/diets/${diet.id}` : `/ver-dieta/${diet.id}`)}
                     style={{
                       background: 'var(--bg-app)',
                       borderRadius: '1.25rem',

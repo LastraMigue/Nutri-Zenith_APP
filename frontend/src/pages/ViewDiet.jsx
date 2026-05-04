@@ -90,20 +90,39 @@ const ViewDiet = () => {
     setSuccessMsg('');
 
     try {
-      const { error } = await supabase
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Sesión expirada. Vuelve a entrar.');
+
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+
+      // Forzamos el update y pedimos que nos devuelva el registro (select) para confirmar
+      const { data: updatedData, error, count } = await supabase
         .from('diets')
         .update({
-          titulo,
-          descripcion,
-          plan
+          titulo: titulo.trim(),
+          descripcion: descripcion.trim(),
+          plan: plan,
+          is_verified: profile?.role === 'admin'
         })
-        .eq('id', id);
+        .eq('id', id)
+        .select(); // Esto nos confirma si realmente se guardó algo
 
       if (error) throw error;
+      
+      if (!updatedData || updatedData.length === 0) {
+        throw new Error('No tienes permiso para editar esta dieta o no se encontró.');
+      }
+
       setSuccessMsg('¡Cambios guardados con éxito!');
+      setDiet(updatedData[0]);
+      setTimeout(() => setSuccessMsg(''), 3000);
     } catch (err) {
-      console.error('Error updating diet:', err);
-      setErrorMsg('No se pudieron guardar los cambios.');
+      console.error('Error al guardar:', err);
+      setErrorMsg(err.message || 'Error desconocido al guardar.');
     } finally {
       setSaving(false);
     }
