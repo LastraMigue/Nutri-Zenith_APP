@@ -42,6 +42,7 @@ const ViewProduct = () => {
   const [nombre, setNombre] = useState('');
   const [kcal, setKcal] = useState('');
   const [barcode, setBarcode] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
   const [calidad, setCalidad] = useState(3);
   const [barcodeValid, setBarcodeValid] = useState(true); // Asumimos true al cargar si ya tiene uno
 
@@ -68,6 +69,7 @@ const ViewProduct = () => {
         setNombre(data.nombre);
         setKcal(data.kcal);
         setBarcode(data.barcode || '');
+        setImageUrl(data.image_url || '');
         setCalidad(data.calidad || 3);
         setBarcodeValid(true);
         
@@ -83,8 +85,12 @@ const ViewProduct = () => {
     // Si el barcode actual es diferente al original del producto, invalidamos
     if (product && barcode !== (product.barcode || '')) {
       setBarcodeValid(false);
+      // Si el código cambia o se borra, quitamos la imagen antigua para no confundir
+      setImageUrl('');
     } else if (product && barcode === (product.barcode || '')) {
       setBarcodeValid(true);
+      // Restauramos la imagen original si volvemos al código original
+      setImageUrl(product.image_url || '');
     }
   }, [barcode, product]);
 
@@ -110,7 +116,8 @@ const ViewProduct = () => {
           nombre,
           kcal: parseInt(kcal),
           barcode,
-          calidad
+          calidad,
+          image_url: imageUrl
         })
         .eq('id', id);
 
@@ -199,7 +206,17 @@ const ViewProduct = () => {
             >
               <ArrowLeft size={20} />
             </button>
-            <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+              {imageUrl && (
+                <div style={{ 
+                  width: '5rem', height: '5rem', borderRadius: '1rem', background: 'white', 
+                  boxShadow: 'var(--shadow-soft)', border: '1px solid var(--border-color)', 
+                  overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' 
+                }}>
+                  <img src={imageUrl} alt="Producto" style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '0.25rem' }} />
+                </div>
+              )}
+              <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '0.75rem' }}>
                 <h1 style={{ 
                   color: 'var(--text-main)', 
@@ -244,6 +261,7 @@ const ViewProduct = () => {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
                   <Calendar size={16} /> {new Date(product.created_at).toLocaleDateString()}
                 </div>
+              </div>
               </div>
             </div>
           </div>
@@ -364,6 +382,7 @@ const ViewProduct = () => {
                               setNombre(d.product.product_name || nombre);
                               const en = d.product.nutriments?.['energy-kcal_100g'];
                               if (en) setKcal(Math.round(en));
+                              if (d.product.image_front_url) setImageUrl(d.product.image_front_url);
                               setBarcodeValid(true);
                               setSuccessMsg('¡Producto validado y datos actualizados!');
                               setTimeout(() => setSuccessMsg(''), 3000);

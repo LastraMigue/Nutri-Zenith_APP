@@ -292,11 +292,24 @@ const ProductManagement = () => {
 
                       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                         <div style={{
-                          width: '3.5rem', height: '3.5rem', borderRadius: '1rem', background: 'white',
-                          display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.75rem',
-                          boxShadow: 'var(--shadow-soft)', border: '1px solid var(--border-color)'
+                          width: '4.5rem', height: '4.5rem', borderRadius: '1rem', background: 'white',
+                          display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem',
+                          boxShadow: 'var(--shadow-soft)', border: '1px solid var(--border-color)',
+                          overflow: 'hidden', position: 'relative'
                         }}>
-                          {quality.icon}
+                          {p.image_url ? (
+                            <img src={p.image_url} alt={p.nombre} style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '0.25rem' }} />
+                          ) : quality.icon}
+                          
+                          {p.image_url && (
+                            <div style={{
+                              position: 'absolute', bottom: 0, right: 0, background: 'rgba(255,255,255,0.9)',
+                              borderRadius: '0.5rem 0 0 0', padding: '0.1rem', fontSize: '1rem',
+                              borderLeft: '1px solid var(--border-color)', borderTop: '1px solid var(--border-color)'
+                            }}>
+                              {quality.icon}
+                            </div>
+                          )}
                         </div>
                         <div>
                           <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: '800', color: 'var(--text-main)' }}>{p.nombre}</h3>

@@ -30,6 +30,7 @@ const UploadProduct = () => {
   const [barcode, setBarcode] = useState('');
   const [nombre, setNombre] = useState('');
   const [kcal, setKcal] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
   const [calidad, setCalidad] = useState(3);
   const [loading, setLoading] = useState(false);
   const [searching, setSearching] = useState(false);
@@ -57,6 +58,7 @@ const UploadProduct = () => {
     setSearching(true);
     setErrorMsg('');
     setBarcodeValid(false);
+    setImageUrl('');
     
     try {
       const response = await fetch(`https://world.openfoodfacts.org/api/v2/product/${barcode}.json`);
@@ -66,8 +68,14 @@ const UploadProduct = () => {
         setNombre(data.product.product_name || '');
         const energyKcal = data.product.nutriments?.['energy-kcal_100g'];
         if (energyKcal) setKcal(Math.round(energyKcal));
+        
+        // Capturar imagen frontal
+        if (data.product.image_front_url) {
+          setImageUrl(data.product.image_front_url);
+        }
+
         setBarcodeValid(true);
-        setSuccessMsg('¡Producto validado correctamente!');
+        setSuccessMsg('¡Producto validado con imagen encontrada!');
         setTimeout(() => setSuccessMsg(''), 3000);
       } else {
         setErrorMsg('El código de barras no existe. Por favor, introduce uno válido o deja el campo vacío.');
@@ -82,6 +90,7 @@ const UploadProduct = () => {
 
   useEffect(() => {
     setBarcodeValid(false);
+    setImageUrl('');
   }, [barcode]);
 
   const handleSave = async () => {
@@ -109,6 +118,7 @@ const UploadProduct = () => {
           kcal: parseInt(kcal),
           barcode,
           calidad,
+          image_url: imageUrl,
           is_verified: userRole === 'admin'
         }]);
 
@@ -297,6 +307,27 @@ const UploadProduct = () => {
               ))}
             </div>
           </section>
+
+          {/* Previsualización de Imagen */}
+          {imageUrl && (
+            <div style={{
+              padding: '1.5rem',
+              background: 'var(--bg-app)',
+              borderRadius: '1rem',
+              border: '1px dashed var(--border-color)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '1rem'
+            }}>
+              <span style={{ fontSize: '0.8rem', fontWeight: '800', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Imagen Detectada</span>
+              <img 
+                src={imageUrl} 
+                alt="Producto" 
+                style={{ width: '150px', height: '150px', objectFit: 'contain', borderRadius: '0.75rem', background: 'white', padding: '0.5rem' }} 
+              />
+            </div>
+          )}
 
           {/* Botón Guardar */}
           <button 
