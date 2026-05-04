@@ -1,10 +1,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Calculator, FileText, Package } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import fondo from '../assets/fondo.jpg';
 
 const ClientDashboard = () => {
+  const navigate = useNavigate();
   return (
     <div style={{
       minHeight: '100vh',
@@ -58,8 +60,8 @@ const ClientDashboard = () => {
           {/* Card 2: Dietas */}
           <ActionCard 
             icon={<FileText size={32} />}
-            title="Subir dietas"
-            onClick={() => console.log('Subir dietas')}
+            title="Dietas"
+            onClick={() => navigate('/dietas')}
             color="#0ea5e9"
           />
 

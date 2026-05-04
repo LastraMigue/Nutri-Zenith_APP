@@ -119,7 +119,7 @@ const ViewDiet = () => {
         .eq('id', id);
 
       if (error) throw error;
-      navigate('/admin/diets');
+      navigate(-1);
     } catch (err) {
       console.error('Error deleting diet:', err);
       alert('Error al eliminar la dieta.');
@@ -139,7 +139,7 @@ const ViewDiet = () => {
       <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', background: 'var(--bg-app)', gap: '1rem' }}>
         <AlertCircle size={40} color="#ef4444" />
         <p style={{ color: 'var(--text-main)', fontSize: '1.2rem', fontWeight: '700' }}>{errorMsg}</p>
-        <button onClick={() => navigate('/admin/diets')} style={{ color: 'var(--primary)', fontWeight: '700', cursor: 'pointer', background: 'none', border: 'none' }}>Volver a la lista</button>
+        <button onClick={() => navigate(-1)} style={{ color: 'var(--primary)', fontWeight: '700', cursor: 'pointer', background: 'none', border: 'none' }}>Volver atrás</button>
       </div>
     );
   }
@@ -169,7 +169,7 @@ const ViewDiet = () => {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <button 
-              onClick={() => navigate('/admin/diets')}
+              onClick={() => navigate(-1)}
               style={{
                 background: 'var(--bg-white)',
                 border: '1px solid var(--border-color)',

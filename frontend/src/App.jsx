@@ -7,6 +7,7 @@ import ClientVerifyOTP from './pages/ClientVerifyOTP';
 import ClientLogin from './pages/ClientLogin';
 import ClientVerifyLoginOTP from './pages/ClientVerifyLoginOTP';
 import ClientDashboard from './pages/ClientDashboard';
+import ClientDietManagement from './pages/ClientDietManagement';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminProfiles from './pages/AdminProfiles';
@@ -34,6 +35,15 @@ function App() {
         element={
           <ProtectedRoute allowedRole="client">
             <ClientDashboard />
+          </ProtectedRoute>
+        } 
+      />
+
+      <Route 
+        path="/dietas" 
+        element={
+          <ProtectedRoute allowedRole="client">
+            <ClientDietManagement />
           </ProtectedRoute>
         } 
       />
@@ -69,12 +79,14 @@ function App() {
 
       <Route path="/admin/diets" element={<ProtectedRoute allowedRole="admin"><DietManagement /></ProtectedRoute>} />
       <Route path="/admin/diets/:id" element={<ProtectedRoute allowedRole="admin"><ViewDiet /></ProtectedRoute>} />
+      <Route path="/ver-dieta/:id" element={<ProtectedRoute allowedRole="client"><ViewDiet /></ProtectedRoute>} />
       
       <Route path="/admin/products" element={<ProtectedRoute allowedRole="admin"><ProductManagement /></ProtectedRoute>} />
       <Route path="/admin/products/:id" element={<ProtectedRoute allowedRole="admin"><ViewProduct /></ProtectedRoute>} />
       <Route path="/admin/products/upload" element={<ProtectedRoute allowedRole="admin"><UploadProduct /></ProtectedRoute>} />
       
       <Route path="/admin/upload-diet" element={<ProtectedRoute allowedRole="admin"><UploadDiet /></ProtectedRoute>} />
+      <Route path="/subir-dieta" element={<ProtectedRoute allowedRole="client"><UploadDiet /></ProtectedRoute>} />
       
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
