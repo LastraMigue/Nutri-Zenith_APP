@@ -110,22 +110,34 @@ const ViewProduct = () => {
     setSuccessMsg('');
 
     try {
-      const { error } = await supabase
+      const { data: { user } } = await supabase.auth.getUser();
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+
+      const { data: updatedData, error } = await supabase
         .from('products')
         .update({
           nombre,
           kcal: parseInt(kcal),
           barcode,
           calidad,
-          image_url: imageUrl
+          image_url: imageUrl,
+          is_verified: profile?.role === 'admin'
         })
-        .eq('id', id);
+        .eq('id', id)
+        .select();
 
       if (error) throw error;
+      if (!updatedData || updatedData.length === 0) throw new Error('No tienes permiso para editar este producto.');
+
       setSuccessMsg('¡Cambios guardados con éxito!');
+      setProduct(updatedData[0]);
     } catch (err) {
       console.error('Error updating product:', err);
-      setErrorMsg('No se pudieron guardar los cambios.');
+      setErrorMsg(err.message || 'No se pudieron guardar los cambios.');
     } finally {
       setSaving(false);
     }
@@ -141,7 +153,7 @@ const ViewProduct = () => {
         .eq('id', id);
 
       if (error) throw error;
-      navigate('/admin/products');
+      navigate(-1);
     } catch (err) {
       console.error('Error deleting product:', err);
       alert('Error al eliminar el producto.');
@@ -161,7 +173,7 @@ const ViewProduct = () => {
       <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', background: 'var(--bg-app)', gap: '1rem' }}>
         <AlertCircle size={40} color="#ef4444" />
         <p style={{ color: 'var(--text-main)', fontSize: '1.2rem', fontWeight: '700' }}>{errorMsg}</p>
-        <button onClick={() => navigate('/admin/products')} style={{ color: 'var(--primary)', fontWeight: '700', cursor: 'pointer', background: 'none', border: 'none' }}>Volver a la lista</button>
+        <button onClick={() => navigate(-1)} style={{ color: 'var(--primary)', fontWeight: '700', cursor: 'pointer', background: 'none', border: 'none' }}>Volver atrás</button>
       </div>
     );
   }
@@ -193,7 +205,7 @@ const ViewProduct = () => {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <button 
-              onClick={() => navigate('/admin/products')}
+              onClick={() => navigate(-1)}
               style={{
                 background: 'var(--bg-white)',
                 border: '1px solid var(--border-color)',
@@ -456,7 +468,9 @@ const ViewProduct = () => {
                   <div style={{ fontSize: '4rem' }}>{currentQuality.icon}</div>
                   <div>
                     <h2 style={{ margin: 0, color: currentQuality.color, fontSize: '2rem', fontWeight: '900' }}>{currentQuality.label}</h2>
-                    <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '1.1rem' }}>Valoración nutricional del especialista</p>
+                    <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '1.1rem' }}>
+                      {product.profiles?.role === 'admin' ? 'Valoración nutricional del especialista' : 'Valoración nutricional'}
+                    </p>
                   </div>
                 </div>
               )}

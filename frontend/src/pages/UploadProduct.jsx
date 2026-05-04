@@ -124,11 +124,11 @@ const UploadProduct = () => {
 
       if (error) throw error;
 
-      setSuccessMsg('¡Producto guardado correctamente!');
-      setTimeout(() => navigate('/admin/products'), 2000);
+      setSuccessMsg(userRole === 'admin' ? '¡Producto guardado y verificado correctamente!' : '¡Producto guardado correctamente!');
+      setTimeout(() => navigate(-1), 2000);
     } catch (err) {
       console.error(err);
-      setErrorMsg('Error al guardar el producto.');
+      setErrorMsg(err.message || 'Error al guardar el producto.');
     } finally {
       setLoading(false);
     }
@@ -159,7 +159,7 @@ const UploadProduct = () => {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <button 
-              onClick={() => navigate('/admin/products')}
+              onClick={() => navigate(-1)}
               style={{
                 background: 'var(--bg-white)',
                 border: '1px solid var(--border-color)',

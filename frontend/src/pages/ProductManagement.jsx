@@ -36,11 +36,20 @@ const ProductManagement = () => {
   const [sortBy, setSortBy] = useState('newest');
   const [activeTab, setActiveTab] = useState('all'); // 'all', 'admins', 'mine'
   const [currentUserId, setCurrentUserId] = useState(null);
+  const [userProfile, setUserProfile] = useState(null);
 
   useEffect(() => {
     const init = async () => {
       const { data: { user } } = await supabase.auth.getUser();
-      setCurrentUserId(user?.id);
+      if (user) {
+        setCurrentUserId(user.id);
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
+          .single();
+        setUserProfile(profile);
+      }
       fetchProducts();
     };
     init();
@@ -48,27 +57,31 @@ const ProductManagement = () => {
 
   const fetchProducts = async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from('products')
-      .select(`
-        *,
-        profiles:creator_id (nombre, role)
-      `)
-      .order('created_at', { ascending: false });
-    
-    if (error) {
-      console.error('Error fetching products:', error);
-    } else {
-      // Normalizar datos para que se parezcan al formato de dietas
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .select(`
+          *,
+          profiles:creator_id (nombre, role)
+        `)
+        .order('created_at', { ascending: false });
+      
+      if (error) throw error;
+
       const normalizedData = data.map(p => ({
         ...p,
         creator_nombre: p.profiles?.nombre || 'Desconocido',
-        creator_role: p.profiles?.role || 'client'
+        creator_role: p.profiles?.role || 'user'
       }));
       setProducts(normalizedData);
+    } catch (err) {
+      console.error('Error fetching products:', err);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
+
+  const isAdmin = userProfile?.role === 'admin';
 
   const handleDeleteProduct = async (e, productId) => {
     e.stopPropagation();
@@ -131,7 +144,7 @@ const ProductManagement = () => {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <button 
-              onClick={() => navigate('/admin-dashboard')}
+              onClick={() => navigate(-1)}
               style={{
                 background: 'var(--bg-white)',
                 border: '1px solid var(--border-color)',
@@ -145,13 +158,17 @@ const ProductManagement = () => {
               <ArrowLeft size={20} />
             </button>
             <div>
-              <h1 style={{ color: 'var(--text-main)', fontSize: '2rem', fontWeight: '800' }}>Productos</h1>
-              <p style={{ color: 'var(--text-muted)' }}>Gestiona el catálogo de productos recomendados.</p>
+              <h1 style={{ color: 'var(--text-main)', fontSize: '2rem', fontWeight: '800' }}>
+                {isAdmin ? 'Gestión de Productos' : 'Productos'}
+              </h1>
+              <p style={{ color: 'var(--text-muted)' }}>
+                {isAdmin ? 'Gestiona el catálogo de productos recomendados.' : 'Explora productos y recomendaciones nutricionales.'}
+              </p>
             </div>
           </div>
 
           <button 
-            onClick={() => navigate('/admin/products/upload')}
+            onClick={() => navigate(isAdmin ? '/admin/products/upload' : '/subir-producto')}
             style={{
               background: 'var(--primary)',
               color: 'white',
@@ -167,7 +184,7 @@ const ProductManagement = () => {
             }}
           >
             <Plus size={20} />
-            Subir Producto
+            {isAdmin ? 'Añadir Producto' : 'Subir Mi Producto'}
           </button>
         </div>
 
@@ -202,7 +219,7 @@ const ProductManagement = () => {
                     textTransform: 'capitalize'
                   }}
                 >
-                  {tab === 'all' ? 'Todos' : tab === 'admins' ? 'Administradores' : 'Mis productos'}
+                  {tab === 'all' ? 'Todos' : tab === 'admins' ? 'Especialistas' : 'Mis productos'}
                 </button>
               ))}
             </div>
@@ -265,7 +282,7 @@ const ProductManagement = () => {
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: i * 0.05 }}
                       whileHover={{ y: -5, boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}
-                      onClick={() => navigate(`/admin/products/${p.id}`)}
+                      onClick={() => navigate(isAdmin ? `/admin/products/${p.id}` : `/ver-producto/${p.id}`)}
                       style={{
                         background: 'var(--bg-app)',
                         borderRadius: '1.25rem',

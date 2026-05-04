@@ -47,6 +47,31 @@ function App() {
         } 
       />
       
+      <Route 
+        path="/productos" 
+        element={
+          <ProtectedRoute allowedRole="client">
+            <ProductManagement />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/subir-producto" 
+        element={
+          <ProtectedRoute allowedRole="client">
+            <UploadProduct />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/ver-producto/:id" 
+        element={
+          <ProtectedRoute allowedRole="client">
+            <ViewProduct />
+          </ProtectedRoute>
+        } 
+      />
+
       <Route path="/admin-login" element={<AdminLogin />} />
       
       <Route 

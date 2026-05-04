@@ -68,8 +68,8 @@ const ClientDashboard = () => {
           {/* Card 3: Productos */}
           <ActionCard 
             icon={<Package size={32} />}
-            title="Subir productos recomendados"
-            onClick={() => console.log('Subir productos')}
+            title="Productos"
+            onClick={() => navigate('/productos')}
             color="#8b5cf6"
           />
         </div>
