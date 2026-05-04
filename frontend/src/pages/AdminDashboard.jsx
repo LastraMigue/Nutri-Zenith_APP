@@ -69,8 +69,8 @@ const AdminDashboard = () => {
           {/* Card 3: Productos */}
           <ActionCard 
             icon={<Package size={32} />}
-            title="Subir productos recomendados verificados"
-            onClick={() => console.log('Subir productos')}
+            title="Productos"
+            onClick={() => navigate('/admin/products')}
             color="#8b5cf6"
           />
 
