@@ -131,7 +131,7 @@ const AdminLogin = () => {
               onChange={handleChange}
               className="auth-input"
               style={{ paddingLeft: '3rem' }}
-              autoComplete="new-password"
+              autoComplete="current-password"
             />
           </div>
         </motion.div>
