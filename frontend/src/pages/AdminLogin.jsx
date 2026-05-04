@@ -46,10 +46,21 @@ const AdminLogin = () => {
       return;
     }
 
-    // Verify if the user is an admin
-    const isSpecialist = 
-      data.user?.email === 'nutrizenithapp@gmail.com' || 
-      data.user?.user_metadata?.role === 'admin';
+    // 1. Verificación básica por email hardcoded
+    let isSpecialist = data.user?.email === 'nutrizenithapp@gmail.com';
+
+    // 2. Verificación robusta consultando la tabla de perfiles
+    if (!isSpecialist) {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', data.user.id)
+        .single();
+      
+      if (profile?.role === 'admin') {
+        isSpecialist = true;
+      }
+    }
 
     if (!isSpecialist) {
       await supabase.auth.signOut();
@@ -59,8 +70,6 @@ const AdminLogin = () => {
     }
 
     setLoading(false);
-
-    // Si es correcto, redirigimos al dashboard del especialista
     navigate('/admin-dashboard');
   };
 
@@ -103,7 +112,7 @@ const AdminLogin = () => {
               onChange={handleChange}
               className="auth-input"
               style={{ paddingLeft: '3rem' }}
-              autoComplete="email"
+              autoComplete="username"
             />
           </div>
         </motion.div>
@@ -122,7 +131,7 @@ const AdminLogin = () => {
               onChange={handleChange}
               className="auth-input"
               style={{ paddingLeft: '3rem' }}
-              autoComplete="current-password"
+              autoComplete="new-password"
             />
           </div>
         </motion.div>

@@ -10,6 +10,7 @@ import ClientDashboard from './pages/ClientDashboard';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminProfiles from './pages/AdminProfiles';
+import AdminCreate from './pages/AdminCreate';
 import DietManagement from './pages/DietManagement';
 import UploadDiet from './pages/UploadDiet';
 import ViewDiet from './pages/ViewDiet';
@@ -44,6 +45,15 @@ function App() {
         element={
           <ProtectedRoute allowedRole="admin">
             <AdminDashboard />
+          </ProtectedRoute>
+        } 
+      />
+      
+      <Route 
+        path="/admin/create" 
+        element={
+          <ProtectedRoute allowedRole="admin">
+            <AdminCreate />
           </ProtectedRoute>
         } 
       />

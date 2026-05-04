@@ -25,8 +25,23 @@ const ProtectedRoute = ({ children, allowedRole }) => {
       
       // Determine the user's role
       let userRole = 'client';
-      if (user.email === 'nutrizenithapp@gmail.com' || user.user_metadata?.role === 'admin') {
+      
+      // 1. Verificación por email maestro
+      if (user.email === 'nutrizenithapp@gmail.com') {
         userRole = 'admin';
+      } else {
+        // 2. Verificación robusta por base de datos
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
+          .single();
+        
+        if (profile?.role === 'admin') {
+          userRole = 'admin';
+        } else if (profile?.role === 'client') {
+          userRole = 'client';
+        }
       }
 
       if (mounted) {

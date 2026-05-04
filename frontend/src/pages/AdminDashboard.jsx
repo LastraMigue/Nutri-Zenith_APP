@@ -78,7 +78,7 @@ const AdminDashboard = () => {
           <ActionCard 
             icon={<UserPlus size={32} />}
             title="Añadir otros administradores"
-            onClick={() => console.log('Añadir administradores')}
+            onClick={() => navigate('/admin/create')}
             color="#f59e0b"
           />
         </div>
